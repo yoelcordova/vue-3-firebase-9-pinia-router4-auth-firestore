@@ -9,10 +9,13 @@ import {
 import { auth } from "../firebaseconfig";
 import router from "../router";
 
+import { useDatabaseStore } from "./database";
+
  export const useUserStore = defineStore("userStore", {
             state: () => ({
                 userData: true,
                 loadingUser: false,
+                loadingSession: false,
         
             }),
             actions: {
@@ -57,7 +60,8 @@ import router from "../router";
     
                 },
                 async logoutUser() {
-
+                    const databaseStore = useDatabaseStore();
+                    databaseStore.$reset();
                     try {
                         await signOut(auth)
                         this.userData = null;
@@ -82,7 +86,8 @@ import router from "../router";
 
                           } else {
                             this.userData = null;
-                            
+                            const databaseStore = useDatabaseStore();
+                            databaseStore.$reset();
 
                           }
                           resolve(user);
